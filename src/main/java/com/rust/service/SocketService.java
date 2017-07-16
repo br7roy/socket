@@ -24,12 +24,11 @@ public class SocketService {
 
     private static final boolean switchFlg = true;
 
-    private static final String hostName = "192.168.1.6";
-
-    private static final int port = 8080;
+    private static final String hostName = "192.168.62.30";
 
 
-    public void startup() {
+
+    public void startup(int port) {
 
 
         InputStream inputStream = null;
@@ -69,6 +68,8 @@ public class SocketService {
 
         try {
 
+            System.out.println("Socket 监听器 start...");
+
             serverSocket = new ServerSocket(port);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -77,11 +78,13 @@ public class SocketService {
         }
         while (true) {
 
+            System.out.println("等待socket...");
+
             try {
 
-                System.out.println("Socket 监听器 start...");
-
                 socket = serverSocket.accept();
+
+                System.out.println("拦截成功...");
 
                 //获取输出流，响应客户端的请求
                 outputStream = socket.getOutputStream();
@@ -106,22 +109,12 @@ public class SocketService {
 //                String data = stringBuilder.toString();
 //
 //                System.out.println("传输流中客户端请求报文：" + data);
+
                 inputStream = socket.getInputStream();
                 inputStreamReader = new InputStreamReader(inputStream, "GBK");
-                char[] buffer = new char[1024];
-                StringBuilder bf = new StringBuilder();
-                int n = 0;
-                while ((n = inputStreamReader.read(buffer)) != -1) {
-                    bf.append(new String(buffer, 0, n));
-                    if (n != 1024) {
-                        break;
-                    }
-                }
 
-                String reqData = bf.toString();
-                if (reqData == null || "".equals(reqData)) {
-                    continue;
-                }
+                String reqData = stream2ReqData(inputStreamReader);
+
                 System.out.println("传输流中客户端请求报文：" + reqData);
 
                 socket.shutdownInput();//关闭输入流
@@ -135,7 +128,7 @@ public class SocketService {
                 printWriter.write(respData);
                 printWriter.flush();//调用flush()方法将缓冲输出
 
-                System.out.println("处理完毕");
+                System.out.println("处理完毕...");
 
 
             } catch (IOException e) {
@@ -170,5 +163,19 @@ public class SocketService {
         }
 
 
+    }
+
+    static String stream2ReqData(InputStreamReader inputStreamReader) throws IOException {
+        char[] buffer = new char[1024];
+        StringBuilder bf = new StringBuilder();
+        int n = 0;
+        while ((n = inputStreamReader.read(buffer)) != -1) {
+            bf.append(new String(buffer, 0, n));
+            if (n != 1024) {
+                break;
+            }
+        }
+
+        return bf.toString();
     }
 }
