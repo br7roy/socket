@@ -20,8 +20,9 @@ public class Boot {
     public static void main(String[] args) throws IOException {
 //        new SocketService().startup(8434);
 //        new SocketService().startup(8421);
-        new SocketService().startup(1099);
+//        new SocketService().startup(1099);
 //        new SocketService().startup(8437);
+        new SocketService().startup(8080);
 
 
 

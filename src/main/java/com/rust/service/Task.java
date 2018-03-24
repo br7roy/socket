@@ -36,6 +36,7 @@ public class Task {
                 System.out.println("心跳");
 
                 Socket socket = new Socket("192.168.62.30", 8437);
+//                Socket socket = new Socket("122.226.186.185", 8431);
                 OutputStream outputStream = socket.getOutputStream();
                 ByteBuffer buf = null;
                 byte[] b;
@@ -212,6 +213,17 @@ public class Task {
                 buf.get(b, 0, buf.remaining());
                 outputStream.write(b);
                 outputStream.flush();
+
+                System.out.println("领奖");
+                buf.clear();
+                buf = ByteBuffer.allocate(10000);
+                buf.putInt(s5.length() + 4);
+                buf.put(s5.getBytes("UTF-8"));
+                buf.flip();
+                b = new byte[buf.remaining()];
+                buf.get(b, 0, buf.remaining());
+                outputStream.write(b);
+                outputStream.flush();
 //
 //                System.out.println("心跳");
 //                buf.clear();
@@ -251,7 +263,7 @@ public class Task {
 //                outputStream.write(b);
 //                outputStream.flush();
 
-                Thread.sleep(200000);
+                Thread.sleep(20000);
                 System.out.println("任务结束，等待20秒");
 
                 flg = false;
