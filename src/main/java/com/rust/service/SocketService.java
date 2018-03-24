@@ -6,6 +6,7 @@
 */
 package com.rust.service;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 
 import com.rust.component.Response;
 
@@ -39,6 +41,8 @@ public class SocketService {
         InputStream inputStream = null;
 
         InputStreamReader inputStreamReader = null;
+
+        BufferedInputStream bufferedInputStream = null;
 
         BufferedReader bufferedReader = null;
 
@@ -116,9 +120,15 @@ public class SocketService {
 //                System.out.println("传输流中客户端请求报文：" + data);
 
                 inputStream = socket.getInputStream();
-                inputStreamReader = new InputStreamReader(inputStream, "GBK");
 
-                String reqData = stream2ReqData(inputStreamReader);
+                //inputStreamReader = new InputStreamReader(inputStream, "GBK");
+
+                //String reqData = stream2ReqData(inputStreamReader);
+
+                bufferedInputStream = new BufferedInputStream(inputStream);
+                String reqData = stream2Data2(bufferedInputStream);
+
+
 
                 System.out.println("传输流中客户端请求报文：" + reqData);
 
@@ -182,5 +192,17 @@ public class SocketService {
         }
 
         return bf.toString();
+    }
+
+    static String stream2Data2(BufferedInputStream bufferedInputStream) throws IOException {
+        byte[] bytes = new byte[1024];
+        int len = 0;
+        StringBuilder sb = new StringBuilder();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        while ((len = bufferedInputStream.read(bytes)) != -1) {
+            byteBuffer.put(bytes, 0, len);
+            sb.append(new String(bytes));
+        }
+        return sb.toString();
     }
 }

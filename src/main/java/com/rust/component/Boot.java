@@ -6,9 +6,9 @@
 */
 package com.rust.component;
 
-import com.rust.service.SocketService;
-
 import java.io.IOException;
+
+import com.rust.service.SocketService;
 
 /**
  * FileName:    Boot
@@ -22,7 +22,7 @@ public class Boot {
 //        new SocketService().startup(8421);
 //        new SocketService().startup(1099);
 //        new SocketService().startup(8437);
-        new SocketService().startup(8080);
+        new SocketService().startup(2181);
 
 
 
